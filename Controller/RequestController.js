@@ -64,6 +64,7 @@ exports.requestBook = catchAsync(async (req, res, next) => {
   next();
 });
 
+
 exports.approveRequest = catchAsync(async (req, res, next) => {
   const token = req.headers.authentication.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.JWT_Secret);
@@ -88,13 +89,13 @@ exports.approveRequest = catchAsync(async (req, res, next) => {
   if (book.qty === 0) {
     return res.status(404).json({ status: "Not Found" });
   }
-
+  const id=req.query.id
   const studentEmail = req.body.email;
   const status = req.body.status;
   const student = await User.findOne({ email: studentEmail });
   const studentName = student.Name;
   const updateRequest = await Request.findOneAndUpdate(
-    { book: bookName, email: studentEmail },
+    {_id:id},
     { status: status },
     { new: true }
   );
